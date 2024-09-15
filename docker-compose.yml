@@ -23,16 +23,12 @@ services:
       - ./:/var/www/
     extra_hosts:
       - "host.docker.internal:host-gateway"
-    ports:
-      - 8025:8025
-      - 1025:1025
     environment:
       XDEBUG_MODE: debug,coverage
       XDEBUG_CONFIG:
         client_host=host.docker.internal
         start_with_request=yes
         use_compression=1
-    command: /usr/local/bin/mailpit
     container_name: app
 
   db:
@@ -58,3 +54,18 @@ services:
     - PMA_HOST=db
     - PMA_USER=${DB_USERNAME}
     - PMA_PASSWORD=${DB_PASSWORD}
+
+  mailpit:
+    image: axllent/mailpit
+    container_name: mailpit
+    restart: unless-stopped
+    volumes:
+      - ./tmp/mail/data:/data
+    ports:
+      - 8025:8025
+      - 1025:1025
+    environment:
+      MP_MAX_MESSAGES: 5000
+      MP_DATABASE: /data/mailpit.db
+      MP_SMTP_AUTH_ACCEPT_ANY: 1
+      MP_SMTP_AUTH_ALLOW_INSECURE: 1

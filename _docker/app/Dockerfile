@@ -8,7 +8,7 @@ RUN apt-get update && apt-get install -y \
         libxml2-dev \
         libonig-dev \
         libzip-dev \
-        curl zip unzip mc \
+        curl zip unzip mc passwd telnet \
         git && \
         docker-php-ext-install pdo_mysql && \
         docker-php-ext-install bcmath && \
@@ -21,6 +21,8 @@ RUN pecl install xdebug
 RUN docker-php-ext-enable xdebug
 
 COPY ./_docker/app/php.ini /usr/local/etc/php/conf.d/php.ini
+
+RUN echo 'root:root' | chpasswd
 
 # Install composer
 ENV COMPOSER_ALLOW_SUPERUSER=1
