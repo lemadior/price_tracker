@@ -2,7 +2,8 @@
     "name": "dev/parser",
     "autoload": {
         "psr-4": {
-            "App\\": "src/"
+            "App\\": "app/",
+            "Core\\": "core/"
         }
     },
     "minimum-stability": "stable",
