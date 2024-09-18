@@ -2,11 +2,19 @@
 
 namespace Core;
 
+use Core\Service\RouterService;
+
 class Router
 {
+    protected RouterService $routerService;
+    public function __construct()
+    {
+        $this->routerService = new RouterService();
+    }
+
     private $routes = [];
 
-    public function add($uri, $controllerAction): void
+    public function add(string $uri, array|string $controllerAction): void
     {
         $this->routes[$uri] = $controllerAction;
     }
@@ -14,12 +22,17 @@ class Router
     public function dispatch($uri): mixed
     {
         if (array_key_exists($uri, $this->routes)) {
-            list($controller, $action) = explode('@', $this->routes[$uri]);
+            $route = is_array($this->routes[$uri])
+                ? $this->routes[$uri]
+                : $route = explode('@', $this->routes[$uri]);
 
-            $controller = "App\\Controllers\\{$controller}";
+            $action = !empty($route[1]) ? $route[1] : null;
+
+            $controller = $this->routerService->getControllerPath($route[0]);
+
             $controllerInstance = new $controller();
 
-            return $controllerInstance->$action();
+            return $action ? $controllerInstance->$action() : $controllerInstance();
         }
 
         http_response_code(404);

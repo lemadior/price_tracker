@@ -1,24 +1,32 @@
 <?php
 
-namespace App\Controllers;
+namespace App\Controllers\Auth;
 
-use Core\Controller;
 use Core\Auth;
+use Exception;
 use App\Models\User;
+use Core\Controller;
 
-class AuthController extends Controller
+class LoginController extends Controller
 {
-    public function login()
+    public function __invoke()
     {
+        $bp = true;
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $username = $_POST['username'];
             $password = $_POST['password'];
 
-            $user = User::findByUsername($username);
+            try {
+                $user = User::findByUsername($username);
+            } catch (Exception $err) {
+                return $this->view('login', ['error' => $err->getMessage()]);
+            }
 
             if ($user && password_verify($password, $user['password'])) {
                 Auth::login($user);
+
                 header('Location: /');
+
                 return;
             }
 
@@ -26,14 +34,5 @@ class AuthController extends Controller
         }
 
         return $this->view('login');
-    }
-
-    public function logout(): void
-    {
-        Auth::logout();
-
-        header('Location: /login');
-
-        return;
     }
 }
