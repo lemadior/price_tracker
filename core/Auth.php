@@ -1,5 +1,26 @@
 <?php
 
-namespace App\Core;
+namespace Core;
 
-class Auth {}
+class Auth
+{
+    public static function check(): bool
+    {
+        return isset($_SESSION['user']);
+    }
+
+    public static function login($user): void
+    {
+        $_SESSION['user'] = $user;
+    }
+
+    public static function logout(): void
+    {
+        unset($_SESSION['user']);
+    }
+
+    public static function user(): mixed
+    {
+        return $_SESSION['user'] ?? null;
+    }
+}

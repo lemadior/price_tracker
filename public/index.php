@@ -1,6 +1,16 @@
 <?php
+$breakpoint = true;
+require_once __DIR__ . '/../vendor/autoload.php';
 
-echo "<h1>First Start Page</h1>";
 
-// phpinfo();
-echo '<a href="/mail.php">MAIL</a>';
+use Core\Router;
+
+session_start();
+
+$router = new Router();
+
+require_once __DIR__ . '/../config/routes.php';
+
+$uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+
+$router->dispatch($uri);
