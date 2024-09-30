@@ -19,22 +19,24 @@ class RegisterController extends Controller
                 $user = User::findByUsername($username);
 
                 // If $user got a value it means that specified username is already taken
-                return $this->view('register', ['error' => 'Username exist']);
+                return $this->view('register', [self::MSG_ERROR => 'Username exist']);
             } catch (Exception $err) {
                 $user = false;
             }
 
             if ($password !== $confirmPassword) {
-                return $this->view('register', ['error' => 'Password do not match']);
+                return $this->view('register', [self::MSG_ERROR => 'Password do not match']);
             }
 
             try {
                 User::create($username, $password);
             } catch (Exception $err) {
-                return $this->view('register', ['error' => 'Cannot create the new user']);
+                return $this->view('register', [self::MSG_ERROR => 'Cannot create the new user']);
             }
 
-            return $this->view('login', ['success' => 'New User successfully created']);
+            // header('Location: /login');
+            $this->redirect('/login', [self::MSG_SUCCESS => 'New User successfully created']);
+            // exit();
         }
 
         return $this->view('register');

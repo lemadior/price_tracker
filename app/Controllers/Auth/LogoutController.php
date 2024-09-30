@@ -11,8 +11,10 @@ class LogoutController extends Controller
     {
         Auth::logout();
 
-        header('Location: /login');
+        $this->redirect('/login');
 
-        return;
+        // header('Location: /login');
+
+        // return;
     }
 }

@@ -6,6 +6,7 @@ use Core\Auth;
 use Exception;
 use App\Models\User;
 use Core\Controller;
+use App\Enums\MessageEnum as Message;
 
 class LoginController extends Controller
 {
@@ -19,18 +20,19 @@ class LoginController extends Controller
             try {
                 $user = User::findByUsername($username);
             } catch (Exception $err) {
-                return $this->view('login', ['error' => $err->getMessage()]);
+                return $this->view('login', [Message::ERROR => $err->getMessage()]);
             }
 
             if ($user && password_verify($password, $user['password'])) {
                 Auth::login($user);
 
-                header('Location: /');
+                $this->redirect('/');
+                // header('Location: /');
 
-                return;
+                // exit();
             }
 
-            return $this->view('login', ['error' => 'invalid credentials']);
+            return $this->view('login', [Message::ERROR => 'invalid credentials']);
         }
 
         return $this->view('login');

@@ -1,6 +1,6 @@
 <?
 
-namespace Core\Service;
+namespace Core\Services;
 
 class RouterService
 {

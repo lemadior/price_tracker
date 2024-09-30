@@ -2,7 +2,7 @@
 
 namespace Core;
 
-use Core\Service\RouterService;
+use Core\Services\RouterService;
 
 class Router
 {
